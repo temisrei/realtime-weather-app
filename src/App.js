@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
+import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
+import { ReactComponent as RainIcon } from "./images/rain.svg";
+import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
 
 const Container = styled.div`
   background-color: #ededed;
@@ -56,6 +60,11 @@ const AirFlow = styled.div`
   font-weight: 300;
   color: #828282;
   margin-bottom: 20px;
+  svg {
+    width: 25px;
+    height: auto;
+    margin-right: 30px;
+  }
 `;
 
 const Rain = styled.div`
@@ -64,6 +73,11 @@ const Rain = styled.div`
   font-size: 16x;
   font-weight: 300;
   color: #828282;
+  svg {
+    width: 25px;
+    height: auto;
+    margin-right: 30px;
+  }
 `;
 
 const Refresh = styled.div`
@@ -74,6 +88,16 @@ const Refresh = styled.div`
   align-items: flex-end;
   font-size: 12px;
   color: #828282;
+  svg {
+    margin-left: 10px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+`;
+
+const DayCloudy = styled(DayCloudyIcon)`
+  flex-basis: 30%;
 `;
 
 function App() {
@@ -86,10 +110,17 @@ function App() {
           <Temperature>
             23 <Celsius>°C</Celsius>
           </Temperature>
+          <DayCloudy />
         </CurrentWeather>
-        <AirFlow> 23 m/h </AirFlow>
-        <Rain> 48% </Rain>
-        <Refresh> 最後觀測時間：上午 12:03 </Refresh>
+        <AirFlow>
+          <AirFlowIcon /> 23 m/h
+        </AirFlow>
+        <Rain>
+          <RainIcon /> 48%
+        </Rain>
+        <Refresh>
+          最後觀測時間：上午 12:03 <RefreshIcon />
+        </Refresh>
       </WeatherCard>
     </Container>
   );
