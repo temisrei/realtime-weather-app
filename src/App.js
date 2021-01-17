@@ -1,5 +1,4 @@
 import React from "react";
-// import './App.css';
 import styled from "@emotion/styled";
 
 const Container = styled.div`
