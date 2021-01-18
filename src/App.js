@@ -122,27 +122,37 @@ const theme = {
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
+  
+  // 先定義會使用到的資料狀態
+  const [currentWeather, setCurrentWeather] = useState({
+    locationName: '高雄市',
+    description: '晴時多雲',
+    windSpeed: 1.6,
+    temperature: 18.5,
+    rainPossibility: 48.3,
+    observationTime: '2021-01-18 11:09:00',
+  });
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
         <WeatherCard>
-          <Location>台北市</Location>
-          <Description>多雲時晴</Description>
+          <Location>{currentWeather.locationName}</Location>
+          <Description>{currentWeather.description}</Description>
           <CurrentWeather>
             <Temperature>
-              23 <Celsius>°C</Celsius>
+              {currentWeather.temperature} <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
           <AirFlow>
-            <AirFlowIcon /> 23 m/h
+            <AirFlowIcon /> {currentWeather.windSpeed} m/h
           </AirFlow>
           <Rain>
-            <RainIcon /> 48%
+            <RainIcon /> {currentWeather.rainPossibility}%
           </Rain>
           <Refresh>
-            最後觀測時間：上午 12:03 <RefreshIcon />
+            最後觀測時間：{currentWeather.observationTime} <RefreshIcon />
           </Refresh>
         </WeatherCard>
       </Container>
