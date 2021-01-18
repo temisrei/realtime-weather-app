@@ -5,6 +5,7 @@ import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
 import { ThemeProvider } from '@emotion/react';
+import dayjs from "dayjs";
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
@@ -156,7 +157,7 @@ function App() {
             {new Intl.DateTimeFormat('zh-TW', {
               hour: 'numeric',
               minute: 'numeric',
-            }).format(new Date(currentWeather.observationTime))}
+            }).format(dayjs(currentWeather.observationTime))}
             {' '}
             <RefreshIcon />
           </Refresh>
