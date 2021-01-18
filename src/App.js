@@ -141,14 +141,14 @@ function App() {
   
   // 先定義會使用到的資料狀態
   const [weatherElement, setWeatherElement] = useState({
-    locationName: '高雄市',
-    description: '晴時多雲',
-    windSpeed: 1.6,
-    temperature: 18.5,
-    rainPossibility: 48.3,
-    observationTime: '2021-01-18 11:09:00',
-    weatherCode: 2,
-    comfortability: '寒冷',
+    locationName: '',
+    description: '',
+    windSpeed: 0,
+    temperature: 0,
+    rainPossibility: 0,
+    observationTime: new Date(),
+    weatherCode: 0,
+    comfortability: '',
     isLoading: true,
   });
 
