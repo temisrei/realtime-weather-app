@@ -136,7 +136,7 @@ const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
 const LOCATION_NAME = '高雄';
 
 function App() {
-  console.log('Invoke function component');
+  
   const [currentTheme, setCurrentTheme] = useState('light');
   
   // 先定義會使用到的資料狀態
@@ -151,9 +151,8 @@ function App() {
   });
 
   useEffect(() => {
-    console.log('execute function in useEffect');
     fetchCurrentWeather();
-  }, []);
+  }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
   const fetchCurrentWeather = () => {
     setCurrentWeather((prevState) => ({
@@ -167,7 +166,6 @@ function App() {
       .then((data) => {
         // 取得資料
         const locationData = data.records.location[0];
-        // console.log('locationData', locationData);
 
         // 過濾資料
         const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
@@ -176,7 +174,6 @@ function App() {
           }
           return neededElements;
         }, {}); // {} is initialValue
-        // console.log('weatherElements', weatherElements);
 
         // 更新 React 資料狀態
         setCurrentWeather({
@@ -194,7 +191,6 @@ function App() {
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
-        {console.log('render')}
         <WeatherCard>
           <Location>{currentWeather.locationName}</Location>
           <Description>{currentWeather.description}</Description>
