@@ -138,11 +138,33 @@ function App() {
   });
 
   const handleClick = () => {
+    // 打中央氣象局 API
     fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', data);
-      })
+        // 取得資料
+        const locationData = data.records.location[0];
+        // console.log('locationData', locationData);
+
+        // 過濾資料
+        const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+          if (['WDSD', 'TEMP'].includes(item.elementName)) {
+            neededElements[item.elementName] = item.elementValue;
+          }
+          return neededElements;
+        }, {}); // {} is initialValue
+        // console.log('weatherElements', weatherElements);
+
+        // 更新 React 資料狀態
+        setCurrentWeather({
+          locationName: locationData.locationName,
+          description: '晴時多雲',
+          windSpeed: weatherElements.WDSD,
+          temperature: weatherElements.TEMP,
+          rainPossibility: 48.3,
+          observationTime: locationData.time.obsTime,
+        })
+      });
   };
 
   return (
