@@ -136,7 +136,6 @@ const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
 const LOCATION_NAME = '高雄';
 
 function App() {
-  
   const [currentTheme, setCurrentTheme] = useState('light');
   
   // 先定義會使用到的資料狀態
@@ -149,6 +148,17 @@ function App() {
     observationTime: '2021-01-18 11:09:00',
     isLoading: true,
   });
+
+  // 解構賦值
+  const {
+    locationName,
+    description,
+    windSpeed,
+    temperature,
+    rainPossibility,
+    observationTime,
+    isLoading
+  } = currentWeather;
 
   useEffect(() => {
     fetchCurrentWeather();
@@ -192,30 +202,30 @@ function App() {
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
         <WeatherCard>
-          <Location>{currentWeather.locationName}</Location>
-          <Description>{currentWeather.description}</Description>
+          <Location>{locationName}</Location>
+          <Description>{description}</Description>
           <CurrentWeather>
             <Temperature>
-              {Math.round(currentWeather.temperature)} <Celsius>°C</Celsius>
+              {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
           <AirFlow>
-            <AirFlowIcon /> {currentWeather.windSpeed} m/h
+            <AirFlowIcon /> {windSpeed} m/h
           </AirFlow>
           <Rain>
-            <RainIcon /> {currentWeather.rainPossibility}%
+            <RainIcon /> {rainPossibility}%
           </Rain>
           <Refresh 
-            isLoading={currentWeather.isLoading}
+            isLoading={isLoading}
             onClick={fetchCurrentWeather}>
             最後觀測時間：
             {new Intl.DateTimeFormat('zh-TW', {
               hour: 'numeric',
               minute: 'numeric',
-            }).format(dayjs(currentWeather.observationTime))}
+            }).format(dayjs(observationTime))}
             {' '}
-            {currentWeather.isLoading ? <LoadingIcon /> : <RefreshIcon />}
+            {isLoading ? <LoadingIcon /> : <RefreshIcon />}
           </Refresh>
         </WeatherCard>
       </Container>
