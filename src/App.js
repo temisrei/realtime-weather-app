@@ -121,6 +121,9 @@ const theme = {
   },
 };
 
+const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
+const LOCATION_NAME = '高雄';
+
 function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
   
@@ -133,6 +136,14 @@ function App() {
     rainPossibility: 48.3,
     observationTime: '2021-01-18 11:09:00',
   });
+
+  const handleClick = () => {
+    fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data', data);
+      })
+  };
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
@@ -159,7 +170,7 @@ function App() {
               minute: 'numeric',
             }).format(dayjs(currentWeather.observationTime))}
             {' '}
-            <RefreshIcon />
+            <RefreshIcon onClick={handleClick} />
           </Refresh>
         </WeatherCard>
       </Container>
