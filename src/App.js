@@ -4,6 +4,7 @@ import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
+import { ReactComponent as LoadingIcon } from "./images/loading.svg";
 import { ThemeProvider } from '@emotion/react';
 import dayjs from "dayjs";
 
@@ -199,14 +200,14 @@ function App() {
           <Rain>
             <RainIcon /> {currentWeather.rainPossibility}%
           </Rain>
-          <Refresh>
+          <Refresh onClick={fetchCurrentWeather}>
             最後觀測時間：
             {new Intl.DateTimeFormat('zh-TW', {
               hour: 'numeric',
               minute: 'numeric',
             }).format(dayjs(currentWeather.observationTime))}
             {' '}
-            <RefreshIcon onClick={fetchCurrentWeather} />
+            {currentWeather.isLoading ? <LoadingIcon /> : <RefreshIcon />}
           </Refresh>
         </WeatherCard>
       </Container>
