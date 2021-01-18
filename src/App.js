@@ -139,7 +139,7 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
   
   // 先定義會使用到的資料狀態
-  const [currentWeather, setCurrentWeather] = useState({
+  const [weatherElement, setWeatherElement] = useState({
     locationName: '高雄市',
     description: '晴時多雲',
     windSpeed: 1.6,
@@ -158,14 +158,14 @@ function App() {
     rainPossibility,
     observationTime,
     isLoading
-  } = currentWeather;
+  } = weatherElement;
 
   useEffect(() => {
     fetchCurrentWeather();
   }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
   const fetchCurrentWeather = () => {
-    setCurrentWeather((prevState) => ({
+    setWeatherElement((prevState) => ({
         ...prevState,
         isLoading: true,
       }));
@@ -186,7 +186,7 @@ function App() {
         }, {}); // {} is initialValue
 
         // 更新 React 資料狀態
-        setCurrentWeather({
+        setWeatherElement({
           locationName: locationData.locationName,
           description: '晴時多雲',
           windSpeed: weatherElements.WDSD,
