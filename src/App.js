@@ -141,7 +141,7 @@ function App() {
           <Description>{currentWeather.description}</Description>
           <CurrentWeather>
             <Temperature>
-              {currentWeather.temperature} <Celsius>°C</Celsius>
+              {Math.round(currentWeather.temperature)} <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
@@ -152,7 +152,13 @@ function App() {
             <RainIcon /> {currentWeather.rainPossibility}%
           </Rain>
           <Refresh>
-            最後觀測時間：{currentWeather.observationTime} <RefreshIcon />
+            最後觀測時間：
+            {new Intl.DateTimeFormat('zh-TW', {
+              hour: 'numeric',
+              minute: 'numeric',
+            }).format(new Date(currentWeather.observationTime))}
+            {' '}
+            <RefreshIcon />
           </Refresh>
         </WeatherCard>
       </Container>
