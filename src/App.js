@@ -136,6 +136,7 @@ function App() {
     temperature: 18.5,
     rainPossibility: 48.3,
     observationTime: '2021-01-18 11:09:00',
+    isLoading: true,
   });
 
   useEffect(() => {
@@ -144,6 +145,11 @@ function App() {
   }, []);
 
   const fetchCurrentWeather = () => {
+    setCurrentWeather((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
+
     // 打中央氣象局 API
     fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
       .then((response) => response.json())
@@ -169,6 +175,7 @@ function App() {
           temperature: weatherElements.TEMP,
           rainPossibility: 48.3,
           observationTime: locationData.time.obsTime,
+          isLoading: false,
         })
       });
   };
