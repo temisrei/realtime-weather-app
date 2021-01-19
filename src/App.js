@@ -167,23 +167,29 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await Promise.all([
+      setWeatherElement((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
+
+      const [currentWeather, weatherForecast] = await Promise.all([
         fetchCurrentWeather(),
         fetchWeatherForecast()
       ]);
 
-      console.log(data);
+      // 把取得的資料，解構賦值後放入 setSomething
+      setWeatherElement((prevState) => ({
+        ...prevState,
+        ...currentWeather,
+        ...weatherForecast,
+        isLoading: false,
+      }));
     };
 
     fetchData();
   }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
   const fetchCurrentWeather = () => {
-    setWeatherElement((prevState) => ({
-      ...prevState,
-      isLoading: true,
-    }));
-
     // [打中央氣象局 API]
     // 把 fetch 拿到的 Promise 回傳出去
     return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
@@ -212,11 +218,6 @@ function App() {
   };
 
   const fetchWeatherForecast = () => {
-    setWeatherElement((prevState) => ({
-      ...prevState,
-      isLoading: true,
-    }));
-
     return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME_FORECAST}`)
       .then((response) => response.json())
       .then((data) => {
