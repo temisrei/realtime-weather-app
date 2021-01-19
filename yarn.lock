@@ -4066,6 +4066,11 @@
     "whatwg-mimetype" "^2.3.0"
     "whatwg-url" "^8.0.0"
 
+"dayjs@^1.10.3":
+  "integrity" "sha512-/2fdLN987N8Ki7Id8BUN2nhuiRyxTLumQnSQf9CNncFCyqFsSKb9TNhzRYcC8K8eJSJOKvbvkImo/MKKhNi4iw=="
+  "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.10.3.tgz"
+  "version" "1.10.3"
+
 "debug@^2.2.0":
   "integrity" "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="
   "resolved" "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz"

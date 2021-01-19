@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "@emotion/styled";
 import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
+import { ReactComponent as LoadingIcon } from "./images/loading.svg";
 import { ThemeProvider } from '@emotion/react';
+import dayjs from "dayjs";
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
@@ -94,6 +96,16 @@ const Refresh = styled.div`
     width: 15px;
     height: 15px;
     cursor: pointer;
+    animation: rotate infinite 1.5s linear;
+    animation-duration: ${({ isLoading }) => (isLoading ? '1.5s' : '0s')};
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
   }
 `;
 
@@ -120,29 +132,148 @@ const theme = {
   },
 };
 
+const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
+const LOCATION_NAME = '高雄';
+const LOCATION_NAME_FORECAST = '高雄市';
+
+const fetchCurrentWeather = () => {
+  // [打中央氣象局 API]
+  // 把 fetch 拿到的 Promise 回傳出去
+  return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // 取得資料
+      const locationData = data.records.location[0];
+
+      // 過濾資料
+      const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+        if (['WDSD', 'TEMP'].includes(item.elementName)) {
+          neededElements[item.elementName] = item.elementValue;
+        }
+        return neededElements;
+      }, {}); // {} is initialValue
+
+      // [更新 React 資料狀態]
+      // 改為將取得資料回傳出去，而不是直接 setSomething
+      return {
+        locationName: locationData.locationName,
+        windSpeed: weatherElements.WDSD,
+        temperature: weatherElements.TEMP,
+        observationTime: locationData.time.obsTime,
+      };
+    });
+};
+
+const fetchWeatherForecast = () => {
+  return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME_FORECAST}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // 取得資料
+      const locationData = data.records.location[0];
+      // 過濾資料
+      const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+        if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
+          neededElements[item.elementName] = item.time[0].parameter;
+        }
+        return neededElements;
+      }, {}); // {} is initialValue
+
+      // [更新 React 資料狀態]
+      // 改為將取得資料回傳出去，而不是直接 setSomething
+      return {
+        description: weatherElements.Wx.parameterName,
+        weatherCode: weatherElements.Wx.parameterValue,
+        rainPossibility: weatherElements.PoP.parameterName,
+        comfortability: weatherElements.CI.parameterName,
+      };
+    });
+};
+
 function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
+  
+  // 先定義會使用到的資料狀態
+  const [weatherElement, setWeatherElement] = useState({
+    locationName: '',
+    description: '',
+    windSpeed: 0,
+    temperature: 0,
+    rainPossibility: 0,
+    observationTime: new Date(),
+    weatherCode: 0,
+    comfortability: '',
+    isLoading: true,
+  });
+
+  // 解構賦值
+  const {
+    locationName,
+    description,
+    windSpeed,
+    temperature,
+    rainPossibility,
+    observationTime,
+    weatherCode,
+    comfortability,
+    isLoading
+  } = weatherElement;
+
+  const fetchData = useCallback(async () => {
+    setWeatherElement((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+
+    const [currentWeather, weatherForecast] = await Promise.all([
+      fetchCurrentWeather(),
+      fetchWeatherForecast()
+    ]);
+
+    // 把取得的資料，解構賦值後放入 setSomething
+    setWeatherElement((prevState) => ({
+      ...prevState,
+      ...currentWeather,
+      ...weatherForecast,
+      isLoading: false,
+    }));
+  }, []);
+
+  useEffect(() => {
+    console.log('execute function in useEffect');
+    fetchData();
+  }, [fetchData]); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
         <WeatherCard>
-          <Location>台北市</Location>
-          <Description>多雲時晴</Description>
+          <Location>{locationName}</Location>
+          <Description>{description} {comfortability}</Description>
           <CurrentWeather>
             <Temperature>
-              23 <Celsius>°C</Celsius>
+              {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
           <AirFlow>
-            <AirFlowIcon /> 23 m/h
+            <AirFlowIcon /> {windSpeed} m/h
           </AirFlow>
           <Rain>
-            <RainIcon /> 48%
+            <RainIcon /> {rainPossibility}%
           </Rain>
-          <Refresh>
-            最後觀測時間：上午 12:03 <RefreshIcon />
+          <Refresh 
+            isLoading={isLoading}
+            onClick={() => {
+              console.log('execute function in onClick');
+              fetchData();
+            }}>
+            最後觀測時間：
+            {new Intl.DateTimeFormat('zh-TW', {
+              hour: 'numeric',
+              minute: 'numeric',
+            }).format(dayjs(observationTime))}
+            {' '}
+            {isLoading ? <LoadingIcon /> : <RefreshIcon />}
           </Refresh>
         </WeatherCard>
       </Container>
