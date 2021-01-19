@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "@emotion/styled";
 import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
@@ -218,7 +218,7 @@ function App() {
     isLoading
   } = weatherElement;
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setWeatherElement((prevState) => ({
       ...prevState,
       isLoading: true,
@@ -236,12 +236,12 @@ function App() {
       ...weatherForecast,
       isLoading: false,
     }));
-  };
+  }, []);
 
   useEffect(() => {
     console.log('execute function in useEffect');
     fetchData();
-  }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
+  }, [fetchData]); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
