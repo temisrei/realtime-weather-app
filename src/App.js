@@ -218,27 +218,28 @@ function App() {
     isLoading
   } = weatherElement;
 
+  const fetchData = async () => {
+    setWeatherElement((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+
+    const [currentWeather, weatherForecast] = await Promise.all([
+      fetchCurrentWeather(),
+      fetchWeatherForecast()
+    ]);
+
+    // 把取得的資料，解構賦值後放入 setSomething
+    setWeatherElement((prevState) => ({
+      ...prevState,
+      ...currentWeather,
+      ...weatherForecast,
+      isLoading: false,
+    }));
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setWeatherElement((prevState) => ({
-        ...prevState,
-        isLoading: true,
-      }));
-
-      const [currentWeather, weatherForecast] = await Promise.all([
-        fetchCurrentWeather(),
-        fetchWeatherForecast()
-      ]);
-
-      // 把取得的資料，解構賦值後放入 setSomething
-      setWeatherElement((prevState) => ({
-        ...prevState,
-        ...currentWeather,
-        ...weatherForecast,
-        isLoading: false,
-      }));
-    };
-
+    console.log('execute function in useEffect');
     fetchData();
   }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
 
@@ -263,8 +264,8 @@ function App() {
           <Refresh 
             isLoading={isLoading}
             onClick={() => {
-              fetchCurrentWeather();
-              fetchWeatherForecast();
+              console.log('execute function in onClick');
+              fetchData();
             }}>
             最後觀測時間：
             {new Intl.DateTimeFormat('zh-TW', {
