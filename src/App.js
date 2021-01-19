@@ -136,6 +136,59 @@ const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
 const LOCATION_NAME = '高雄';
 const LOCATION_NAME_FORECAST = '高雄市';
 
+const fetchCurrentWeather = () => {
+  // [打中央氣象局 API]
+  // 把 fetch 拿到的 Promise 回傳出去
+  return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // 取得資料
+      const locationData = data.records.location[0];
+
+      // 過濾資料
+      const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+        if (['WDSD', 'TEMP'].includes(item.elementName)) {
+          neededElements[item.elementName] = item.elementValue;
+        }
+        return neededElements;
+      }, {}); // {} is initialValue
+
+      // [更新 React 資料狀態]
+      // 改為將取得資料回傳出去，而不是直接 setSomething
+      return {
+        locationName: locationData.locationName,
+        windSpeed: weatherElements.WDSD,
+        temperature: weatherElements.TEMP,
+        observationTime: locationData.time.obsTime,
+      };
+    });
+};
+
+const fetchWeatherForecast = () => {
+  return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME_FORECAST}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // 取得資料
+      const locationData = data.records.location[0];
+      // 過濾資料
+      const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+        if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
+          neededElements[item.elementName] = item.time[0].parameter;
+        }
+        return neededElements;
+      }, {}); // {} is initialValue
+
+      // [更新 React 資料狀態]
+      // 改為將取得資料回傳出去，而不是直接 setSomething
+      return {
+        description: weatherElements.Wx.parameterName,
+        weatherCode: weatherElements.Wx.parameterValue,
+        rainPossibility: weatherElements.PoP.parameterName,
+        comfortability: weatherElements.CI.parameterName,
+      };
+    });
+};
+
 function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
   
@@ -188,59 +241,6 @@ function App() {
 
     fetchData();
   }, []); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
-
-  const fetchCurrentWeather = () => {
-    // [打中央氣象局 API]
-    // 把 fetch 拿到的 Promise 回傳出去
-    return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // 取得資料
-        const locationData = data.records.location[0];
-
-        // 過濾資料
-        const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
-          if (['WDSD', 'TEMP'].includes(item.elementName)) {
-            neededElements[item.elementName] = item.elementValue;
-          }
-          return neededElements;
-        }, {}); // {} is initialValue
-
-        // [更新 React 資料狀態]
-        // 改為將取得資料回傳出去，而不是直接 setSomething
-        return {
-          locationName: locationData.locationName,
-          windSpeed: weatherElements.WDSD,
-          temperature: weatherElements.TEMP,
-          observationTime: locationData.time.obsTime,
-        };
-      });
-  };
-
-  const fetchWeatherForecast = () => {
-    return fetch(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTHORIZATION_KEY}&locationName=${LOCATION_NAME_FORECAST}`)
-      .then((response) => response.json())
-      .then((data) => {
-        // 取得資料
-        const locationData = data.records.location[0];        
-        // 過濾資料
-        const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
-          if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
-            neededElements[item.elementName] = item.time[0].parameter;
-          }
-          return neededElements;
-        }, {}); // {} is initialValue
-
-        // [更新 React 資料狀態]
-        // 改為將取得資料回傳出去，而不是直接 setSomething
-        return {
-          description: weatherElements.Wx.parameterName,
-          weatherCode: weatherElements.Wx.parameterValue,
-          rainPossibility: weatherElements.PoP.parameterName,
-          comfortability: weatherElements.CI.parameterName,
-        };
-      });
-  };
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
