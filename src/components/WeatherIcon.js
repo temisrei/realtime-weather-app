@@ -53,6 +53,19 @@ const weatherIcons = {
   },
 };
 
+// 根據天氣代碼 轉換得到 天氣型態 weatherType, ex: isClear
+const weatherCode2Type = (weatherCode) => {
+  const [weatherType] = Object.entries(weatherTypes).find(([weatherType, weatherCodes]) => {
+    return weatherCodes.includes(Number(weatherCode));
+  }) || [];
+
+  return weatherType;
+};
+
+// faker test
+const weatherCode = 1;
+console.log(weatherCode2Type(weatherCode));
+
 const WeatherIcon = () => {
   return (
     <IconContainer>
