@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled from "@emotion/styled";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
@@ -7,6 +7,7 @@ import { ReactComponent as LoadingIcon } from "./images/loading.svg";
 import { ThemeProvider } from '@emotion/react';
 import dayjs from "dayjs";
 import WeatherIcon from "./components/WeatherIcon";
+import { getMoment } from "./utils/helpers";
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
@@ -201,6 +202,9 @@ function App() {
     isLoading: true,
   });
 
+  // TODO: deal with unnecessary dependency
+  const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), [LOCATION_NAME_FORECAST]);
+
   // 解構賦值
   const {
     locationName,
@@ -249,7 +253,7 @@ function App() {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <WeatherIcon weatherCode={weatherCode} moment="day" />
+            <WeatherIcon weatherCode={weatherCode} moment={moment} />
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
