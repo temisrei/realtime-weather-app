@@ -239,9 +239,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('execute function in useEffect');
     fetchData();
   }, [fetchData]); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
+
+  useEffect(() => {
+    setCurrentTheme((moment === 'day') ? 'light' : 'dark');
+  }, [moment]);
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
