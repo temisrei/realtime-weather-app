@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "@emotion/styled";
 import { ReactComponent as DayClear } from './../images/day-clear.svg';
 import { ReactComponent as DayCloudy } from './../images/day-cloudy.svg';
@@ -67,7 +67,7 @@ const weatherCode = 1;
 console.log(weatherCode2Type(weatherCode));
 
 const WeatherIcon = ({ weatherCode, moment }) => {
-  const weatherType = weatherCode2Type(weatherCode);
+  const weatherType = useMemo(() => weatherCode2Type(weatherCode), [weatherCode]); // 若 weatherCode 改變，則 weatherCode2Type 才會執行
   const weatherIcon = weatherIcons[moment][weatherType];
 
   return (<IconContainer>{weatherIcon}</IconContainer>);
