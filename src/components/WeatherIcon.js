@@ -66,12 +66,11 @@ const weatherCode2Type = (weatherCode) => {
 const weatherCode = 1;
 console.log(weatherCode2Type(weatherCode));
 
-const WeatherIcon = () => {
-  return (
-    <IconContainer>
-      <DayCloudy />
-    </IconContainer>
-  );
+const WeatherIcon = ({ weatherCode, moment }) => {
+  const weatherType = weatherCode2Type(weatherCode);
+  const weatherIcon = weatherIcons[moment][weatherType];
+
+  return (<IconContainer>{weatherIcon}</IconContainer>);
 };
 
 export default WeatherIcon;
