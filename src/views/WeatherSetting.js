@@ -1,5 +1,6 @@
 import React from "react";
 import styled from '@emotion/styled';
+import { availableLocations } from "./../utils/helpers";
 
 const WeatherSettingWrapper = styled.div`
   position: relative;
@@ -98,7 +99,9 @@ const WeatherSetting = ({ title }) => {
       <Title>設定</Title>
       <StyledLabel htmlFor="location">地區</StyledLabel>
       <StyledSelect id="location" name="location">
-        { /* <option></option> */ }
+        {availableLocations.map(({ cityName }) => (
+          <option value={cityName}>{cityName}</option>
+        ))}
       </StyledSelect>
       <ButtonGroup>
         <Back>返回</Back>
