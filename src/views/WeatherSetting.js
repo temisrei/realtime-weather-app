@@ -100,7 +100,7 @@ const WeatherSetting = ({ title }) => {
       <StyledLabel htmlFor="location">地區</StyledLabel>
       <StyledSelect id="location" name="location">
         {availableLocations.map(({ cityName }) => (
-          <option value={cityName}>{cityName}</option>
+          <option value={cityName} key={cityName}>{cityName}</option>
         ))}
       </StyledSelect>
       <ButtonGroup>
