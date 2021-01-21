@@ -135,7 +135,7 @@ const WeatherCard = ({ weatherElement, moment, fetchData }) => {
         onClick={() => {
           fetchData();
         }}>
-  最後觀測時間：
+        最後觀測時間：
         {new Intl.DateTimeFormat('zh-TW', {
           hour: 'numeric',
           minute: 'numeric',
