@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import styled from "@emotion/styled";
-import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
 import { ReactComponent as LoadingIcon } from "./images/loading.svg";
 import { ThemeProvider } from '@emotion/react';
 import dayjs from "dayjs";
+import WeatherIcon from "./components/WeatherIcon";
+import { getMoment } from "./utils/helpers";
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
@@ -109,10 +110,6 @@ const Refresh = styled.div`
   }
 `;
 
-const DayCloudy = styled(DayCloudyIcon)`
-  flex-basis: 30%;
-`;
-
 const theme = {
   light: {
     backgroundColor: '#ededed',
@@ -205,6 +202,9 @@ function App() {
     isLoading: true,
   });
 
+  // TODO: deal with unnecessary dependency
+  const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), [LOCATION_NAME_FORECAST]);
+
   // 解構賦值
   const {
     locationName,
@@ -239,9 +239,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('execute function in useEffect');
     fetchData();
   }, [fetchData]); // [] is dependencies array, 如果裡面的元素有改變的話，就重新做一次。
+
+  useEffect(() => {
+    setCurrentTheme((moment === 'day') ? 'light' : 'dark');
+  }, [moment]);
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
@@ -253,7 +256,7 @@ function App() {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <DayCloudy />
+            <WeatherIcon weatherCode={weatherCode} moment={moment} />
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
