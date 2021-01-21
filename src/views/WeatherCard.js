@@ -133,7 +133,6 @@ const WeatherCard = ({ weatherElement, moment, fetchData }) => {
       <Refresh 
         isLoading={isLoading}
         onClick={() => {
-          console.log('execute function in onClick');
           fetchData();
         }}>
   最後觀測時間：

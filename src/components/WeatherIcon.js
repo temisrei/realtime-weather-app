@@ -62,10 +62,6 @@ const weatherCode2Type = (weatherCode) => {
   return weatherType;
 };
 
-// faker test
-const weatherCode = 1;
-console.log(weatherCode2Type(weatherCode));
-
 const WeatherIcon = ({ weatherCode, moment }) => {
   const weatherType = useMemo(() => weatherCode2Type(weatherCode), [weatherCode]); // 若 weatherCode 改變，則 weatherCode2Type 才會執行
   const weatherIcon = weatherIcons[moment][weatherType];
