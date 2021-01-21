@@ -38,6 +38,7 @@ const LOCATION_NAME = '高雄';
 const LOCATION_NAME_FORECAST = '高雄市';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('WeatherCard');
   const [currentTheme, setCurrentTheme] = useState('light');
 
   const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), []);
@@ -55,12 +56,12 @@ function App() {
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
-        <WeatherCard
+        {currentPage === 'WeatherCard' && (<WeatherCard
           weatherElement={weatherElement}
           moment={moment}
           fetchData={fetchData}
-        />
-        <WeatherSetting />
+        />)}
+        {currentPage === 'WeatherSetting' && <WeatherSetting />}
       </Container>
     </ThemeProvider>
   );
