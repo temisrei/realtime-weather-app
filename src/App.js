@@ -41,6 +41,10 @@ function App() {
   const [currentPage, setCurrentPage] = useState('WeatherCard');
   const [currentTheme, setCurrentTheme] = useState('light');
 
+  const handleCurrentPageChage = (currentPage) => {
+    setCurrentPage(currentPage);
+  };
+
   const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), []);
 
   const [weatherElement, fetchData] = useWeatherAPI({
@@ -60,8 +64,11 @@ function App() {
           weatherElement={weatherElement}
           moment={moment}
           fetchData={fetchData}
+          handleCurrentPageChage={handleCurrentPageChage}
         />)}
-        {currentPage === 'WeatherSetting' && <WeatherSetting />}
+        {currentPage === 'WeatherSetting' && (<WeatherSetting 
+          handleCurrentPageChage={handleCurrentPageChage}
+        />)}
       </Container>
     </ThemeProvider>
   );

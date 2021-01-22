@@ -93,7 +93,7 @@ const Save = styled.button`
   }
 `;
 
-const WeatherSetting = ({ title }) => {
+const WeatherSetting = ({ handleCurrentPageChage }) => {
   return (
     <WeatherSettingWrapper>
       <Title>設定</Title>
@@ -104,7 +104,7 @@ const WeatherSetting = ({ title }) => {
         ))}
       </StyledSelect>
       <ButtonGroup>
-        <Back>返回</Back>
+        <Back onClick={() => handleCurrentPageChage('WeatherCard')}>返回</Back>
         <Save>儲存</Save>
       </ButtonGroup>
     </WeatherSettingWrapper>
