@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styled from "@emotion/styled";
 import { ThemeProvider } from '@emotion/react';
-import { getMoment } from "./utils/helpers";
+import { getMoment, findLocation } from "./utils/helpers";
 import WeatherCard from './views/WeatherCard';
 import WeatherSetting from "./views/WeatherSetting";
 import useWeatherAPI from "./hooks/useWeatherAPI";
@@ -34,23 +34,26 @@ const theme = {
 };
 
 const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
-const LOCATION_NAME = '高雄';
-const LOCATION_NAME_FORECAST = '高雄市';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('WeatherCard');
   const [currentTheme, setCurrentTheme] = useState('light');
+  const [currentCity, setCurrentCity] = useState('高雄市');
 
   const handleCurrentPageChage = (currentPage) => {
     setCurrentPage(currentPage);
   };
 
-  const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), []);
+  const currentLocation = useMemo(() => findLocation(currentCity), [currentCity]);
+  // { cityName: '高雄市', locationName: '高雄', sunriseCityName: '高雄市' }
+  const { cityName, locationName, sunriseCityName } = currentLocation;
+
+  const moment = useMemo(() => getMoment(sunriseCityName), [sunriseCityName]);
 
   const [weatherElement, fetchData] = useWeatherAPI({
     authorizationKey: AUTHORIZATION_KEY,
-    locationName: LOCATION_NAME,
-    locationNameForecast: LOCATION_NAME_FORECAST,
+    locationName,
+    locationNameForecast: cityName,
   });
 
   useEffect(() => {
