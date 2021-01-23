@@ -40,7 +40,7 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState('light');
   const [currentCity, setCurrentCity] = useState('高雄市');
 
-  const handleCurrentPageChage = (currentPage) => {
+  const handleCurrentPageChange = (currentPage) => {
     setCurrentPage(currentPage);
   };
 
@@ -68,10 +68,10 @@ function App() {
           moment={moment}
           fetchData={fetchData}
           cityName={cityName}
-          handleCurrentPageChage={handleCurrentPageChage}
+          handleCurrentPageChange={handleCurrentPageChange}
         />)}
         {currentPage === 'WeatherSetting' && (<WeatherSetting 
-          handleCurrentPageChage={handleCurrentPageChage}
+          handleCurrentPageChange={handleCurrentPageChange}
         />)}
       </Container>
     </ThemeProvider>

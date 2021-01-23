@@ -93,7 +93,7 @@ const Save = styled.button`
   }
 `;
 
-const WeatherSetting = ({ handleCurrentPageChage }) => {
+const WeatherSetting = ({ handleCurrentPageChange }) => {
   const [locationName, setLocationName] = useState('高雄市');
 
   const handleChange = (e) => {
@@ -115,7 +115,7 @@ const WeatherSetting = ({ handleCurrentPageChage }) => {
         ))}
       </StyledSelect>
       <ButtonGroup>
-        <Back onClick={() => handleCurrentPageChage('WeatherCard')}>返回</Back>
+        <Back onClick={() => handleCurrentPageChange('WeatherCard')}>返回</Back>
         <Save onClick={handleSave}>儲存</Save>
       </ButtonGroup>
     </WeatherSettingWrapper>
