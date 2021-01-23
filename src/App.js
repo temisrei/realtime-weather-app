@@ -44,6 +44,10 @@ function App() {
     setCurrentPage(currentPage);
   };
 
+  const handleCurrentCityChange = (currentCity) => {
+    setCurrentCity(currentCity);
+  };
+
   const currentLocation = useMemo(() => findLocation(currentCity), [currentCity]);
   // { cityName: '高雄市', locationName: '高雄', sunriseCityName: '高雄市' }
   const { cityName, locationName, sunriseCityName } = currentLocation;
@@ -71,7 +75,9 @@ function App() {
           handleCurrentPageChange={handleCurrentPageChange}
         />)}
         {currentPage === 'WeatherSetting' && (<WeatherSetting 
+          cityName={cityName}
           handleCurrentPageChange={handleCurrentPageChange}
+          handleCurrentCityChange={handleCurrentCityChange}
         />)}
       </Container>
     </ThemeProvider>
