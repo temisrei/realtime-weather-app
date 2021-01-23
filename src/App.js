@@ -67,6 +67,7 @@ function App() {
           weatherElement={weatherElement}
           moment={moment}
           fetchData={fetchData}
+          cityName={cityName}
           handleCurrentPageChage={handleCurrentPageChage}
         />)}
         {currentPage === 'WeatherSetting' && (<WeatherSetting 
