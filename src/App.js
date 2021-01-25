@@ -38,7 +38,9 @@ const AUTHORIZATION_KEY = 'CWB-D117CBB0-8922-40AA-98AB-55E055F1BBE0';
 function App() {
   const [currentPage, setCurrentPage] = useState('WeatherCard');
   const [currentTheme, setCurrentTheme] = useState('light');
-  const [currentCity, setCurrentCity] = useState('高雄市');
+
+  const storageCity = localStorage.getItem('cityName') || '高雄市';
+  const [currentCity, setCurrentCity] = useState(storageCity);
 
   const handleCurrentPageChange = (currentPage) => {
     setCurrentPage(currentPage);
